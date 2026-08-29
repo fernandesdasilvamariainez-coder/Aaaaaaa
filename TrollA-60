@@ -13,7 +13,7 @@ end
 			JumpscareSound:Play() 
 
 wait(0.1)
-local Creator = loadstring(game:HttpGet("https://pastebin.com/raw/0fSnvfGt"))() 
+local Creator = loadstring(game:HttpGet("https://raw.githubusercontent.com/plamen6789/Utilities-by-Vynixius/refs/heads/main/Doors%20Entity%20Spawner/Source.lua"))() 
 -- Create entity
 local entity = Creator.createEntity({
     CustomName = "A-60", -- Custom name of your entity
