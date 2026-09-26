@@ -19,7 +19,7 @@ local FindPartOnRayWithIgnoreList = workspace.FindPartOnRayWithIgnoreList
 local WorldToViewportPoint = Camera.WorldToViewportPoint
 
 local SelfModules = {
-    DefaultConfig = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Doors%20Entity%20Spawner/DefaultConfig.lua"))(),
+    DefaultConfig = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/a77581355418d0a4682a5bcf5c504d8d733bf41b/Doors%20Entity%20Spawner/DefaultConfig.lua"))(),
     Functions = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/Utilities/main/Functions.lua"))(),
 }
 local ModuleScripts = {
