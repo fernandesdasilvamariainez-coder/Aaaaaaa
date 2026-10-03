@@ -28,6 +28,8 @@ for i,v in pairs(game.ReplicatedStorage.Misc.Eyes:GetDescendants()) do
 	end
 end
 
+-- Change Seek Model
+print("i don't found the script, sorry")
 
 -- Change Seek and Figure Music
 local function GetGitSoundID(GithubSnd,SoundName)
