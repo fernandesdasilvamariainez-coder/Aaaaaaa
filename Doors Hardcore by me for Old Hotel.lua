@@ -7,6 +7,7 @@ print("i'll add stamina...")
 for i,v in pairs(game.ReplicatedStorage.Misc.Eyes:GetDescendants()) do
 	if v.Name == "Eye" then
 		v:FindFirstChild("Part").Decal.Texture = "rbxassetid://1882220622"
+		v:FindFirstChild("Eye").Name = "KYS"
 	end
 end
 
