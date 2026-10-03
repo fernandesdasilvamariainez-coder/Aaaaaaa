@@ -1,4 +1,4 @@
---(ONLY WORKS ON HOTEL-) Hardcore Mode V2 by Man9743 (HeitorGamer9743) Credits to Noonie and Ping for the original mode (Ping for the Models) and i made this mode completelly lonely :( (THIS MODE IS NOT THE ORIGINAL AND SPRINT STAMINA IS MISSING) Thanks to read and enjoy :D
+-- (ONLY WORKS ON HOTEL-) Hardcore Mode V2 by Man9743 (HeitorGamer9743) Credits to Noonie and Ping for the original mode (Ping for the Models) and i made this mode completelly lonely :( (THIS MODE IS NOT THE ORIGINAL AND SPRINT STAMINA IS MISSING) Thanks to read and enjoy :D
 
 -- Warn: Cease is broken, so when it spawn, stop walking or running and wait 7 seconds to continue walking or running
 
