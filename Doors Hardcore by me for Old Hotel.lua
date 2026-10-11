@@ -33,7 +33,7 @@ end
 
 
 -- Stamina
-loadstring(game:HttpGet("https://raw.githubusercontent.com/MuhXd/DoorSuff/main/OtherSuff/Sprint"))()
+print("i found script but is broken so i dont put here")
 
 
 -- Change Seek Eye Texture
@@ -45,7 +45,7 @@ for i,v in pairs(game.ReplicatedStorage.Misc.Eyes:GetDescendants()) do
 end
 
 -- Change Seek Model
-print("i don't found the script, sorry")
+print("i dont found the script, sorry")
 
 -- Change Seek and Figure Music
 local function GetGitSoundID(GithubSnd,SoundName)
@@ -62,7 +62,7 @@ end
 	OldSeek.SoundId=NewSeek
 	OldSeek.Volume = 2.2
 
-	local NewFigure = GetGitSoundID("https://github.com/fernandesdasilvamariainez-coder/Roblox-Doors-Sounds/blob/main/customObject_Sound_NewFigure.mp3raw=true","NewFigure")
+	local NewFigure = GetGitSoundID("https://github.com/fernandesdasilvamariainez-coder/Roblox-Doors-Sounds/blob/main/customObject_Sound_NewFigure.mp3?raw=true","NewFigure")
 	local OldFigure = workspace.Ambience_Figure
 	OldFigure.SoundId=NewFigure
 	local NewFigureStart = GetGitSoundID("https://github.com/fernandesdasilvamariainez-coder/Roblox-Doors-Sounds/blob/main/customObject_Sound_NewFigureStart.mp3?raw=true","NewFigureStart")
@@ -160,4 +160,3 @@ loadstring(game:HttpGet("https://pastebin.com/raw/hcMxjKGF"))()
 
     task.wait(1)  -- Looping freaking entities
 end
--- Thanks to playing this mode
