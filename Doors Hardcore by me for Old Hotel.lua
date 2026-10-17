@@ -1,4 +1,4 @@
--- (ONLY WORKS ON HOTEL-) Hardcore Mode V4 by Man9743 (HeitorGamer9743) Credits to Noonie and Ping for the original mode (Ping for the Models) and i made this mode completelly lonely :( (THIS MODE IS NOT THE ORIGINAL) Thanks to read and enjoy :D
+-- (ONLY WORKS ON HOTEL-) Hardcore Mode V4 by Man9743 (HeitorGamer9743) Credits to Noonie and Ping for the original mode (Ping for the Models) and i made this mode completelly alone :( (THIS MODE IS NOT THE ORIGINAL) Thanks to read and enjoy :D
 
 -- Warn: Cease is broken, so when it spawn, stop walking or running and wait 7 seconds to continue walking or running
 
@@ -87,18 +87,18 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/fernandesdasilvamaria
 wait(15)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/fernandesdasilvamariainez-coder/Doors-Enitity-Spawner-Hotel--/refs/heads/main/Shocker"))() 
 
-wait(15)
+wait(13)
 game.ReplicatedStorage.GameData.LatestRoom.Changed:Wait()
 loadstring(game:HttpGet("https://pastebin.com/raw/xwEPyzyU"))() 
 
 wait(20)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/fernandesdasilvamariainez-coder/Doors-Enitity-Spawner-Hotel--/refs/heads/main/Shocker"))() 
 
-wait(25)
+wait(20)
 game.ReplicatedStorage.GameData.LatestRoom.Changed:Wait()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/fernandesdasilvamariainez-coder/Doors-Enitity-Spawner-Hotel--/refs/heads/main/Cease"))() 
 
-wait(30)
+wait(25)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/fernandesdasilvamariainez-coder/Doors-Enitity-Spawner-Hotel--/refs/heads/main/Shocker"))() 
 
 wait(15)
@@ -112,27 +112,27 @@ wait(25)
 game.ReplicatedStorage.GameData.LatestRoom.Changed:Wait()
 loadstring(game:HttpGet("https://pastebin.com/raw/LP06GgPB"))() 
 
-wait(10)
+wait(8)
 game.ReplicatedStorage.GameData.LatestRoom.Changed:Wait()
 loadstring(game:HttpGet("https://pastebin.com/raw/sLtjEQjb"))() 
 
 wait(15)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/fernandesdasilvamariainez-coder/Doors-Enitity-Spawner-Hotel--/refs/heads/main/Shocker"))() 
 
-wait(15)
+wait(12)
 game.ReplicatedStorage.GameData.LatestRoom.Changed:Wait()
 loadstring(game:HttpGet("https://pastebin.com/raw/xwEPyzyU"))() 
 
 wait(15)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/fernandesdasilvamariainez-coder/Doors-Enitity-Spawner-Hotel--/refs/heads/main/Shocker"))()  
 
-wait(45)
+wait(38)
 loadstring(game:HttpGet("https://pastebin.com/raw/ESt3faS3"))() 
 
 wait(10)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/fernandesdasilvamariainez-coder/Doors-Enitity-Spawner-Hotel--/refs/heads/main/Shocker"))() 
 
-wait(30)
+wait(25)
 game.ReplicatedStorage.GameData.LatestRoom.Changed:Wait()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/fernandesdasilvamariainez-coder/Doors-Enitity-Spawner-Hotel--/refs/heads/main/Cease"))() 
 
@@ -141,13 +141,13 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/fernandesdasilvamaria
 
 wait(35)
 game.ReplicatedStorage.GameData.LatestRoom.Changed:Wait()
-wait(5)
+wait(4)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/fernandesdasilvamariainez-coder/Doors-Enitity-Spawner-Hotel--/refs/heads/main/Silence%20HC"))() 
 
 wait(15)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/fernandesdasilvamariainez-coder/Doors-Enitity-Spawner-Hotel--/refs/heads/main/Shocker"))()  
 
-wait(45)
+wait(35)
 game.ReplicatedStorage.GameData.LatestRoom.Changed:Wait()
 loadstring(game:HttpGet("https://pastebin.com/raw/xwEPyzyU"))() 
 
@@ -158,5 +158,5 @@ wait(60)
 loadstring(game:HttpGet("https://pastebin.com/raw/hcMxjKGF"))()
 
 
-    task.wait(1)  -- Looping freaking entities
+    task.wait(1)  -- Looping new entities cool
 end
