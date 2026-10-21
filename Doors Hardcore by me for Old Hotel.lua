@@ -33,7 +33,81 @@ end
 
 
 -- Stamina
-print("i found script but is broken so i dont put here")
+-- Create the ScreenGui and Sprint Bar
+local player = game.Players.LocalPlayer
+local screenGui = Instance.new("ScreenGui")
+screenGui.Parent = player.PlayerGui
+
+local sprintBarBackground = Instance.new("Frame")
+sprintBarBackground.Size = UDim2.new(0.5, 0, 0.05, 0)  -- Half of the screen width, small height
+sprintBarBackground.Position = UDim2.new(0.25, 0, 0, 0)  -- Centered at top
+sprintBarBackground.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+sprintBarBackground.Parent = screenGui
+
+local sprintBar = Instance.new("Frame")
+sprintBar.Size = UDim2.new(0, 0, 1, 0)  -- Width is dynamic, height fills the background
+sprintBar.BackgroundColor3 = Color3.fromRGB(150, 0, 0)  -- Green for the sprint bar
+sprintBar.Parent = sprintBarBackground
+
+-- Sprint and Stamina Variables
+local sprinting = false
+local maxStamina = 150  -- Maximum stamina
+local currentStamina = maxStamina  -- Starting stamina
+local staminaRegenRate = 5  -- How fast stamina regenerates per second
+local staminaDrainRate = 18  -- How fast stamina drains while sprinting
+local sprintSpeed = 20     -- Sprinting speed
+local walkSpeed = 15       -- Walking speed
+
+-- Function to update the sprint bar
+local function updateSprintBar()
+
+    sprintBar.Size = UDim2.new(currentStamina / maxStamina, 0, 1, 0)
+end
+
+-- Mobile Button for Sprinting
+local sprintButton = Instance.new("TextButton")
+sprintButton.Size = UDim2.new(0.2, 0, 0.1, 0)  -- Size of the button
+sprintButton.Position = UDim2.new(0.8, 0, 0.9, 0)  -- Position at bottom-right corner
+sprintButton.Text = "Sprint"
+sprintButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)  -- Green button
+sprintButton.Parent = screenGui
+
+-- Toggle Sprint on Button Tap
+sprintButton.MouseButton1Click:Connect(function()
+    sprinting = not sprinting  -- Toggle sprinting state
+    if sprinting and game.Players.LocalPlayer.Character.Humanoid.MoveDirection ~= Vector3.new(0, 0, 0) then
+        -- Change walk speed to sprint speed
+        player.Character.Humanoid.WalkSpeed = sprintSpeed
+    else
+        -- Revert to walking speed
+        player.Character.Humanoid.WalkSpeed = walkSpeed
+    end
+end)
+
+-- Function to handle sprinting logic with Heartbeat to avoid infinite loop
+local runService = game:GetService("RunService")
+
+runService.Heartbeat:Connect(function()
+    if sprinting then
+        -- Drain stamina while sprinting
+        if currentStamina > 0 then
+            currentStamina = currentStamina - staminaDrainRate * runService.Heartbeat:Wait() -- Wait time per frame
+        else
+        require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("Your Exhausted", true)
+            sprinting = false  -- Stop sprinting if no stamina
+            player.Character.Humanoid.WalkSpeed = walkSpeed -- Revert speed
+        end
+    else
+        -- Regenerate stamina while not sprinting
+        if currentStamina < maxStamina then
+            currentStamina = currentStamina + staminaRegenRate * runService.Heartbeat:Wait() -- Wait time per frame
+        end
+    end
+
+    -- Keep stamina within bounds
+    currentStamina = math.clamp(currentStamina, 0, maxStamina)
+    updateSprintBar()
+end)
 
 
 -- Change Seek Eye Texture
