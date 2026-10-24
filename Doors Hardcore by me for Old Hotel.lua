@@ -53,8 +53,8 @@ sprintBar.Parent = sprintBarBackground
 local sprinting = false
 local maxStamina = 150  -- Maximum stamina
 local currentStamina = maxStamina  -- Starting stamina
-local staminaRegenRate = 5  -- How fast stamina regenerates per second
-local staminaDrainRate = 18  -- How fast stamina drains while sprinting
+local staminaRegenRate = 15  -- How fast stamina regenerates per second
+local staminaDrainRate = 20  -- How fast stamina drains while sprinting
 local sprintSpeed = 20     -- Sprinting speed
 local walkSpeed = 15       -- Walking speed
 
@@ -93,7 +93,7 @@ runService.Heartbeat:Connect(function()
         if currentStamina > 0 then
             currentStamina = currentStamina - staminaDrainRate * runService.Heartbeat:Wait() -- Wait time per frame
         else
-        require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("Your Exhausted", true)
+        require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("You're Exhausted", true)
             sprinting = false  -- Stop sprinting if no stamina
             player.Character.Humanoid.WalkSpeed = walkSpeed -- Revert speed
         end
