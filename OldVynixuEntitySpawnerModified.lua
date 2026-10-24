@@ -26,15 +26,11 @@ local ModuleScripts = {
     ModuleEvents = require(ReSt.ClientModules.Module_Events),
     MainGame = require(Plr.PlayerGui.MainUI.Initiator.Main_Game),
 }
-local EntityConnections = {}
+getgenv().EntityConnections = EntityConnections or {}
 
 local Spawner = {}
 
 -- Misc Functions
-
-function onCharacterAdded(char)
-    Char, Hum = char, char:WaitForChild("Humanoid")
-end
 
 function getPlayerRoot()
     return Char:FindFirstChild("HumanoidRootPart") or Char:FindFirstChild("Head")
@@ -53,7 +49,7 @@ function dragEntity(entityModel, pos, speed)
             local diff = Vector3.new(pos.X, pos.Y, pos.Z) - rootPos
 
             if diff.Magnitude > 0.1 then
-                entityModel:PivotTo(CFrame.new(rootPos + diff.Unit * math.min(step * speed, diff.Magnitude)))
+                entityModel:SetPrimaryPartCFrame(CFrame.new(rootPos + diff.Unit * math.min(step * speed, diff.Magnitude)))
             else
                 entityConnections.movementNode:Disconnect()
             end
@@ -63,26 +59,18 @@ function dragEntity(entityModel, pos, speed)
     repeat task.wait() until not entityConnections.movementNode.Connected
 end
 
-function loadSound(soundData)
+function loadSound(soundId, properties)
     local sound = Instance.new("Sound")
-    local soundId = tostring(soundData[1])
-    local properties = soundData[2]
+    local numberId = string.gsub(soundId, "%D", "")
+
+    sound.SoundId = "rbxassetid://".. numberId
+    sound.Parent = workspace
 
     for i, v in next, properties do
         if i ~= "SoundId" and i ~= "Parent" then
             sound[i] = v
         end
     end
-
-    if soundId:find("rbxasset://") then -- Custom audio
-        sound.SoundId = soundId
-    else
-        local numberId = soundId:gsub("%D", "")
-
-        sound.SoundId = "rbxassetid://".. numberId
-    end
-    
-    sound.Parent = workspace
 
     return sound
 end
@@ -139,65 +127,46 @@ end
 Spawner.runEntity = function(entityTable)
     -- Nodes
 
-    local nodes = {}
+    local entityNodes = {}
 
     for _, room in next, workspace.CurrentRooms:GetChildren() do
-        local pathfindNodes = room:FindFirstChild("PathfindNodes")
+        local nodes = room:WaitForChild("Nodes", 1)
         
-        if pathfindNodes then
-            pathfindNodes = pathfindNodes:GetChildren()
-        else
-            local fakeNode = Instance.new("Part")
-            fakeNode.Name = "1"
-            fakeNode.CFrame = room:WaitForChild("RoomExit").CFrame - Vector3.new(0, room.RoomExit.Size.Y / 2, 0)
+        if nodes then
+            nodes = nodes:GetChildren()
 
-            pathfindNodes = {fakeNode}
-        end
+            table.sort(nodes, function(a, b)
+                return a.Name < b.Name
+            end)
 
-        table.sort(pathfindNodes, function(a, b)
-            return tonumber(a.Name) < tonumber(b.Name)
-        end)
-
-        for _, node in next, pathfindNodes do
-            nodes[#nodes + 1] = node
+            for _, node in next, nodes do
+                entityNodes[#entityNodes + 1] = node
+            end
         end
     end
 
     -- Spawn
 
     local entityModel = entityTable.Model:Clone()
-    local startNodeIndex = entityTable.Config.BackwardsMovement and #nodes or 1
+    local startNodeIndex = entityTable.Config.BackwardsMovement and #entityNodes or 1
     local startNodeOffset = entityTable.Config.BackwardsMovement and -50 or 50
 
     EntityConnections[entityModel] = {}
-    local entityConnections = EntityConnections[entityModel]
-    
-    entityModel:PivotTo(nodes[startNodeIndex].CFrame * CFrame.new(0, 0, startNodeOffset) + Vector3.new(0, 3.5 + entityTable.Config.HeightOffset, 0))
+    entityModel:SetPrimaryPartCFrame(entityNodes[startNodeIndex].CFrame * CFrame.new(0, 0, startNodeOffset) + Vector3.new(0, 3.5 + entityTable.Config.HeightOffset, 0))
     entityModel.Parent = workspace
     task.spawn(entityTable.Debug.OnEntitySpawned)
-
-    -- Mute entity on spawn
-
-    if CG:FindFirstChild("JumpscareGui") or (Plr.PlayerGui.MainUI.Death.HelpfulDialogue.Visible and not Plr.PlayerGui.MainUI.DeathPanelDead.Visible) then
-        warn("on death screen, mute entity")
-
-        for _, v in next, entityModel:GetDescendants() do
-            if v.ClassName == "Sound" and v.Playing then
-                v:Stop()
-            end
-        end
-    end
 
     -- Flickering
 
     if entityTable.Config.FlickerLights[1] then
-        ModuleScripts.ModuleEvents.flicker(workspace.CurrentRooms[ReSt.GameData.LatestRoom.Value], entityTable.Config.FlickerLights[2])
+        ModuleScripts.ModuleEvents.flickerLights(workspace.CurrentRooms[ReSt.GameData.LatestRoom.Value], entityTable.Config.FlickerLights[2])
     end
 
     -- Movement
 
     task.wait(entityTable.Config.DelayTime)
 
+    local entityConnections = EntityConnections[entityModel]
     local enteredRooms = {}
 
     entityConnections.movementTick = RS.Stepped:Connect(function()
@@ -218,7 +187,7 @@ Spawner.runEntity = function(entityTable)
                         -- Break lights
                         
                         if entityTable.Config.BreakLights then
-                            ModuleScripts.ModuleEvents.shatter(room)
+                            ModuleScripts.ModuleEvents.breakLights(room)
                         end
 
                         break
@@ -261,10 +230,11 @@ Spawner.runEntity = function(entityTable)
 
                         -- Mute entity
 
-                        warn("mute entity")
+                        local playingSounds = {}
 
                         for _, v in next, entityModel:GetDescendants() do
                             if v.ClassName == "Sound" and v.Playing then
+                                playingSounds[#playingSounds + 1] = v
                                 v:Stop()
                             end
                         end
@@ -282,24 +252,20 @@ Spawner.runEntity = function(entityTable)
                         ReSt.GameStats["Player_".. Plr.Name].Total.DeathCause.Value = entityModel.Name
                         
                         if #entityTable.Config.CustomDialog > 0 then
-                            firesignal(ReSt.EntityInfo.DeathHint.OnClientEvent, entityTable.Config.CustomDialog, "Blue")
+                            firesignal(ReSt.Bricks.DeathHint.OnClientEvent, entityTable.Config.CustomDialog)
                         end
-                        
+
                         -- Unmute entity
 
                         task.spawn(function()
-                            repeat task.wait() until Plr.PlayerGui.MainUI.DeathPanelDead.Visible
+                            Plr.PlayerGui.MainUI.DeathPanelDead:GetPropertyChangedSignal("Visible"):Wait()
 
-                            warn("unmute entity:", entityModel)
+                            for _, v in next, playingSounds do
+                                local oldVolume = v.Volume
 
-                            for _, v in next, entityModel:GetDescendants() do
-                                if v.ClassName == "Sound" then
-                                    local oldVolume = v.Volume
-                                
-                                    v.Volume = 0
-                                    v:Play()
-                                    TS:Create(v, TweenInfo.new(2), {Volume = oldVolume}):Play()
-                                end
+                                v.Volume = 0
+                                v:Play()
+                                TS:Create(v, TweenInfo.new(2), {Volume = oldVolume}):Play()
                             end
                         end)
                     end)
@@ -317,21 +283,21 @@ Spawner.runEntity = function(entityTable)
     if entityTable.Config.BackwardsMovement then
         local inverseNodes = {}
 
-        for nodeIdx = #nodes, 1, -1 do
-            inverseNodes[#inverseNodes + 1] = nodes[nodeIdx]
+        for nodeIdx = #entityNodes, 1, -1 do
+            inverseNodes[#inverseNodes + 1] = entityNodes[nodeIdx]
         end
 
-        nodes = inverseNodes
+        entityNodes = inverseNodes
     end
 
     for cycle = 1, math.max(math.random(cyclesConfig.Min, cyclesConfig.Max), 1) do
-        for nodeIdx = 1, #nodes, 1 do
-            dragEntity(entityModel, nodes[nodeIdx].Position + Vector3.new(0, 3.5 + entityTable.Config.HeightOffset, 0), entityTable.Config.Speed)
+        for nodeIdx = 1, #entityNodes, 1 do
+            dragEntity(entityModel, entityNodes[nodeIdx].Position + Vector3.new(0, 3.5 + entityTable.Config.HeightOffset, 0), entityTable.Config.Speed)
         end
 
         if cyclesConfig.Max > 1 then
-            for nodeIdx = #nodes, 1, -1 do
-                dragEntity(entityModel, nodes[nodeIdx].Position + Vector3.new(0, 3.5 + entityTable.Config.HeightOffset, 0), entityTable.Config.Speed)
+            for nodeIdx = #entityNodes, 1, -1 do
+                dragEntity(entityModel, entityNodes[nodeIdx].Position + Vector3.new(0, 3.5 + entityTable.Config.HeightOffset, 0), entityTable.Config.Speed)
             end
         end
 
@@ -364,11 +330,11 @@ Spawner.runJumpscare = function(config)
     local sound1, sound2 = nil, nil
 
     if config.Sound1 then
-        sound1 = loadSound(config.Sound1)
+        sound1 = loadSound(config.Sound1[1], config.Sound1[2])
     end
 
     if config.Sound2 then
-        sound2 = loadSound(config.Sound2)
+        sound2 = loadSound(config.Sound2[1], config.Sound2[2])
     end
 
     -- UI Construction
@@ -456,7 +422,7 @@ Spawner.runJumpscare = function(config)
     sound2:Play()
     
     TS:Create(Face, TweenInfo.new(0.75), {Size = UDim2.new(0, absHeight * 3, 0,  absHeight * 3), ImageTransparency = 0.5}):Play()
-    task.wait(0.75)
+    task.wait(1)
     JumpscareGui:Destroy()
     
     if sound1 then
@@ -470,16 +436,20 @@ end
 
 -- Scripts
 
-Plr.CharacterAdded:Connect(onCharacterAdded)
-
-if not SpawnerSetup then
-    getgenv().SpawnerSetup = true
-
-    workspace.DescendantRemoving:Connect(function(des)
-        if des.Name == "PathfindNodes" then
-            des:Clone().Parent = des.Parent
+task.spawn(function()
+    while true do
+        local canRevive = true
+        
+        for _, v in next, workspace:GetChildren() do
+            if v.Name == "RushMoving" or v.Name == "AmbushMoving" or v:GetAttribute("IsCustomEntity") then
+                canRevive = false
+                break
+            end
         end
-    end)
-end
+        
+        ReSt.GameData.ChaseInSession.Value = not canRevive
+        task.wait(1)
+    end
+end)
 
 return Spawner
